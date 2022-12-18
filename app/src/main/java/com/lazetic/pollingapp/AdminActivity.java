@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.lazetic.pollingapp.objects.Task;
 import com.lazetic.pollingapp.ui.main.CreatePollFragment;
 import com.lazetic.pollingapp.ui.main.StartPollFragment;
+import com.lazetic.pollingapp.ui.main.UserPollFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,6 +98,7 @@ public class AdminActivity extends AppCompatActivity {
         } else {
             db.execSQL("INSERT INTO poll_logs(poll_name,active,start_time,end_time,time) VALUES( '" + name + "','1','" + start + "','" + end + "','" + time + "') ;");
             //TODO BROADCAST PORAKA DO SITE DEKA E POCNAT POLL
+
             Long timee = Integer.parseInt(time) * 60000L;
             new CountDownTimer(timee, 1000) {
 
@@ -123,8 +126,12 @@ public class AdminActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Poll with name " + name + "already exists!", Toast.LENGTH_LONG).show();
         } else {
-            db.execSQL("INSERT INTO polls(poll_name,q1,a1,q2,a2,q3,a3) VALUES( '" + name + "','" + q1 + "','" + a1 + "','" + q2 + "','" + a2 + "','" + q3 + "','" + a3 + "') ;");
+            db.execSQL("INSERT INTO polls(poll_name,q1,a1,q2,a2,q3,a3) VALUES( '" + name + "','" + q1 + "','" + formatA(a1) + "','" + q2 + "','" + formatA(a2) + "','" + q3 + "','" + formatA(a3) + "') ;");
             Toast.makeText(this, "Poll " + name + " created!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public  String formatA(String a){
+        return a.replaceAll("\n", ";");
     }
 }

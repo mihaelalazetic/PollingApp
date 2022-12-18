@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lazetic.pollingapp.AdminActivity;
 import com.lazetic.pollingapp.R;
+import com.lazetic.pollingapp.UserActivity;
 import com.lazetic.pollingapp.objects.MyAdapter;
 import com.lazetic.pollingapp.objects.Task;
 
@@ -54,7 +55,7 @@ public class StartPollFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.activePolls);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(new MyAdapter(polls, getContext()));
+        recyclerView.setAdapter(new MyAdapter(polls, getContext(),task -> recyclerView.getContext())); //TODO DODADI DA MOZE DA SE OTVORI I DA SE VIDAT ODGOVORITE
 
         Spinner spinner = (Spinner) view.findViewById(R.id.listOfPolls);
         List<String> allPolls = ((AdminActivity) requireActivity()).getPolls();
@@ -90,7 +91,6 @@ public class StartPollFragment extends Fragment {
                 String newTime = df.format(cal.getTime());
 
                 ((AdminActivity) requireActivity()).startPoll(spinnerText,myTime,newTime,stime);
-
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.admin_container,new StartPollFragment());
                 fr.commit();

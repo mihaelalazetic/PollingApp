@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.lazetic.pollingapp.objects.MyAdapter;
+import com.lazetic.pollingapp.objects.Poll;
 import com.lazetic.pollingapp.objects.Task;
 import com.lazetic.pollingapp.ui.main.UserTasksFragment;
 
@@ -53,9 +50,9 @@ public class UserActivity extends AppCompatActivity {
         int name_col = cursor.getColumnIndex("poll_name");
         int start_col = cursor.getColumnIndex("start_time");
         int end_col = cursor.getColumnIndex("end_time");
-        if(cursor.getCount() <= 0){
-            polls.add(new Task("No active polls to show","",""));
-        }else {
+        if (cursor.getCount() <= 0) {
+            polls.add(new Task("No active polls to show", "", ""));
+        } else {
             do {
                 polls.add(new Task(cursor.getString(name_col), cursor.getString(start_col), cursor.getString(end_col)));
                 System.out.println("poll names: " + cursor.getString(name_col));
@@ -64,5 +61,19 @@ public class UserActivity extends AppCompatActivity {
         cursor.close();
 
         return polls;
+    }
+
+    public Poll getPollDetails(String name) {
+        Cursor cursor = db.rawQuery("SELECT * from polls WHERE poll_name = '" + name + "'; ", null);
+        cursor.moveToFirst();
+        int q1 = cursor.getColumnIndex("q1"); int q2 = cursor.getColumnIndex("q2"); int q3 = cursor.getColumnIndex("q3");
+        int a1 = cursor.getColumnIndex("a1"); int a2 = cursor.getColumnIndex("a2"); int a3 = cursor.getColumnIndex("a3");
+        Poll poll;
+        do {
+            poll = new Poll(name,cursor.getString(q1), cursor.getString(q2), cursor.getString(q3),
+                    cursor.getString(a1), cursor.getString(a2), cursor.getString(a3));
+        } while (cursor.moveToNext());
+        cursor.close();
+        return poll;
     }
 }
