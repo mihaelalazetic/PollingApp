@@ -38,15 +38,18 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <ScrollView
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/user_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:contentDescription="@string/select_poll"
         app:layout_constraintTop_toTopOf="@+id/appBarLayout"
         tools:layout_editor_absoluteX="0dp" />
+</ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
