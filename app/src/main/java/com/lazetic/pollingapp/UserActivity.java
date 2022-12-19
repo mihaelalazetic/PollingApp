@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -38,7 +40,12 @@ public class UserActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Добре дојдовте " + userName + "!");
 
+        Spinner myTasks = (Spinner) findViewById(R.id.myTasks);
+        List<String> myTasksList = getMyTasks(userName);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, myTasksList);
 
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        myTasks.setAdapter(dataAdapter);
     }
 
     public List<Task> getPolls() {
@@ -75,5 +82,27 @@ public class UserActivity extends AppCompatActivity {
         } while (cursor.moveToNext());
         cursor.close();
         return poll;
+    }
+
+    public List<String> getMyTasks(String name){
+        List<String> myTasks = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM user_logs WHERE user_name = '"+ name +"';'", null);
+        cursor.moveToFirst();
+        if(cursor.getCount() <= 0){
+            myTasks.add("Мои гласања");
+        }else {
+            int name_col = cursor.getColumnIndex("poll_name");
+            do {
+                myTasks.add(cursor.getString(name_col));
+                System.out.println("Tasks: " + cursor.getString(name_col));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return myTasks;
+    }
+
+    public  void addUserToLog(String userName, String pollName, String start, String end){
+        db.execSQL("INSERT INTO user_logs(user_name,poll_name,start_time,end_time) VALUES( '" +
+                userName + "','"+ pollName+"','" + start + "','" + end + "') ;");
     }
 }

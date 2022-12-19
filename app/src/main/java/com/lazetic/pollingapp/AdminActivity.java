@@ -134,4 +134,9 @@ public class AdminActivity extends AppCompatActivity {
     public  String formatA(String a){
         return a.replaceAll("\n", ";");
     }
+
+    public void stopPoll(String pollName){
+        db.execSQL("UPDATE poll_logs SET active = '0' WHERE poll_name ='"+pollName+"';");
+
+    }
 }

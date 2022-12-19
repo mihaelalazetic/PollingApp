@@ -62,7 +62,7 @@
             android:layout_margin="10dp"
             android:layout_marginTop="30dp"
             android:foregroundGravity="center"
-            android:padding="20dp"
+            android:padding="50dp"
             app:cardBackgroundColor="@color/custom_purple"
             app:cardCornerRadius="20dp"
             app:cardElevation="10dp"

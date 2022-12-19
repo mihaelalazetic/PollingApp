@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,16 +20,16 @@ import com.lazetic.pollingapp.objects.RecyclerviewOnClickListener;
 import com.lazetic.pollingapp.objects.Task;
 
 import java.util.List;
-import java.util.Objects;
 
 public class UserTasksFragment extends Fragment implements RecyclerviewOnClickListener {
-
+    Toolbar username;
 
     public UserTasksFragment() {
         // Required empty public constructor
     }
 
-    public static UserTasksFragment newInstance() {return new UserTasksFragment();
+    public static UserTasksFragment newInstance() {
+        return new UserTasksFragment();
     }
 
     @Override
@@ -46,16 +49,25 @@ public class UserTasksFragment extends Fragment implements RecyclerviewOnClickLi
         RecyclerView recyclerView = view.findViewById(R.id.tasksRecycler);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new MyAdapter(polls, getContext(),this));
+        recyclerView.setAdapter(new MyAdapter(polls, getContext(), this));
         return view;
     }
 
     @Override
     public void recyclerviewClick(Task task) {
+        Spinner myTasks = (Spinner) getActivity().findViewById(R.id.myTasks);
+        username = requireActivity().findViewById(R.id.toolbar);
+        String un = username.getTitle().toString();
         Fragment fragment = UserPollFragment.newInstance(task.getName());
         FragmentTransaction fragmentTransaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.user_container, fragment,"user_poll_fragment");
+        fragmentTransaction.replace(R.id.user_container, fragment, "user_poll_fragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        List<String> myTasksList = ((UserActivity) requireActivity()).getMyTasks(un);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, myTasksList);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        myTasks.setAdapter(dataAdapter);
+        ((UserActivity) requireActivity()).addUserToLog(un, task.getName(), task.getStartTime(), task.getEndTime());
     }
 }

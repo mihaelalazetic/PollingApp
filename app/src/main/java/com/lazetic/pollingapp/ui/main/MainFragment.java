@@ -70,7 +70,9 @@ public class MainFragment extends Fragment {
                 intent.putExtra("email",emailText.getText().toString());
                 intent.putExtra("userName",user);
                 startActivity(intent);
-            }else if(Objects.equals(user, "user")) {
+            }else if(Objects.equals(user, "")){
+                // nothing
+            }else {
                 Intent intent = new Intent(getActivity(), UserActivity.class);
                 intent.putExtra("userName",user);
                 startActivity(intent);

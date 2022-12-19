@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -88,6 +89,15 @@ public class UserPollFragment extends Fragment {
         for_loop(ans1, radioGroup1);
         for_loop(ans2, radioGroup2);
         for_loop(ans3, radioGroup3);
+
+        radioGroup1.setOnCheckedChangeListener((group, checkedId) -> {
+                RadioButton radioButton = group.findViewById(checkedId);
+
+                // on below line we are setting text
+                    // for our status text view.
+            Toast.makeText(getContext(),""+radioButton.getText(), Toast.LENGTH_SHORT).show();
+
+        });
     }
 
     public void for_loop(String[] ans, RadioGroup radioGroup) {
@@ -98,6 +108,7 @@ public class UserPollFragment extends Fragment {
             rdbtn.setOnClickListener(View::computeScroll);
             rdbtn.setTextColor(Color.BLACK);
             rdbtn.setButtonTintList(ColorStateList.valueOf(Color.BLACK));
+            rdbtn.setPadding(0,10,0,50);
             radioGroup.addView(rdbtn);
         }
     }
