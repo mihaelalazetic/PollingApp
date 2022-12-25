@@ -12,7 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,6 +21,8 @@ import com.lazetic.pollingapp.R;
 import com.lazetic.pollingapp.UserActivity;
 import com.lazetic.pollingapp.objects.Poll;
 import com.lazetic.pollingapp.objects.User;
+
+import java.util.Objects;
 
 
 public class UserPollFragment extends Fragment {
@@ -58,7 +60,8 @@ public class UserPollFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_poll, container, false);
         TextView titleTV = view.findViewById(R.id.titleTV);
         titleTV.setText(name);
-
+        TextView timer = view.findViewById(R.id.timer);
+//        timer.setText();
         setupQuestions(view);
 
         return view;
@@ -94,13 +97,15 @@ public class UserPollFragment extends Fragment {
         for_loop(ans2, radioGroup2);
         for_loop(ans3, radioGroup3);
 
-        radioClick(radioGroup1);
-        radioClick(radioGroup2);
-        radioClick(radioGroup3);
+        radioClick(radioGroup1,"a1");
+        radioClick(radioGroup2,"a2");
+        radioClick(radioGroup3,"a3");
 
         finishPoll = view.findViewById(R.id.finishPoll);
         finishPoll.setOnClickListener(view1 -> {
-
+            radioClick(radioGroup1,"a1");
+            radioClick(radioGroup2,"a2");
+            radioClick(radioGroup3,"a3");
             FragmentTransaction fr = requireFragmentManager().beginTransaction();
             fr.replace(R.id.user_container, new UserTasksFragment());
             fr.commit();
@@ -120,7 +125,7 @@ public class UserPollFragment extends Fragment {
         }
     }
 
-    public void radioClick(RadioGroup radioGroup1){
+    public void radioClick(RadioGroup radioGroup1,String a){
         radioGroup1.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton radioButton = group.findViewById(checkedId);
 
@@ -131,7 +136,13 @@ public class UserPollFragment extends Fragment {
                 ((RadioButton)radioGroup1.getChildAt(i)).setEnabled(false);
             }
             username = requireActivity().findViewById(R.id.toolbar);
-            ((UserActivity) requireActivity()).updateUserLogA1(username.getTitle().toString(),name,radioButton.getText().toString());
+            if (Objects.equals(a, "a1")) {
+                ((UserActivity) requireActivity()).updateUserLogA1(username.getTitle().toString(),name,radioButton.getText().toString());
+            } else if(Objects.equals(a, "a2")){
+                ((UserActivity) requireActivity()).updateUserLogA2(username.getTitle().toString(),name,radioButton.getText().toString());
+            } else if(Objects.equals(a, "a3")){
+                ((UserActivity) requireActivity()).updateUserLogA3(username.getTitle().toString(),name,radioButton.getText().toString());
+            }
         });
     }
 }

@@ -3,6 +3,7 @@ package com.lazetic.pollingapp.ui.main;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,9 @@ public class TimerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             time = getArguments().getLong(ARG_PARAM1);
+//            FragmentTransaction fr = requireFragmentManager().beginTransaction();
+//            fr.replace(R.id.user_container, new UserTasksFragment());
+//            fr.commit();
         }
     }
 

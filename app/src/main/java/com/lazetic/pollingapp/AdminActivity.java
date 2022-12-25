@@ -108,10 +108,7 @@ public class AdminActivity extends AppCompatActivity {
                 public void onTick(long millisUntilFinished) {
                     Toast.makeText(AdminActivity.this, "Sekundi: "+millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
 //                    mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.admin_container, TimerFragment.newInstance(millisUntilFinished / 1000))
-                            .addToBackStack(null)
-                            .commitNow();
+
 
                 }
 
