@@ -11,12 +11,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.lazetic.pollingapp.objects.Task;
 import com.lazetic.pollingapp.ui.main.CreatePollFragment;
 import com.lazetic.pollingapp.ui.main.StartPollFragment;
+import com.lazetic.pollingapp.ui.main.TimerFragment;
 import com.lazetic.pollingapp.ui.main.UserPollFragment;
+import com.lazetic.pollingapp.ui.main.UserTasksFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +108,11 @@ public class AdminActivity extends AppCompatActivity {
                 public void onTick(long millisUntilFinished) {
                     Toast.makeText(AdminActivity.this, "Sekundi: "+millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
 //                    mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.admin_container, TimerFragment.newInstance(millisUntilFinished / 1000))
+                            .addToBackStack(null)
+                            .commitNow();
+
                 }
 
                 public void onFinish() {

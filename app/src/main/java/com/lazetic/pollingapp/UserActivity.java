@@ -73,24 +73,28 @@ public class UserActivity extends AppCompatActivity {
     public Poll getPollDetails(String name) {
         Cursor cursor = db.rawQuery("SELECT * from polls WHERE poll_name = '" + name + "'; ", null);
         cursor.moveToFirst();
-        int q1 = cursor.getColumnIndex("q1"); int q2 = cursor.getColumnIndex("q2"); int q3 = cursor.getColumnIndex("q3");
-        int a1 = cursor.getColumnIndex("a1"); int a2 = cursor.getColumnIndex("a2"); int a3 = cursor.getColumnIndex("a3");
+        int q1 = cursor.getColumnIndex("q1");
+        int q2 = cursor.getColumnIndex("q2");
+        int q3 = cursor.getColumnIndex("q3");
+        int a1 = cursor.getColumnIndex("a1");
+        int a2 = cursor.getColumnIndex("a2");
+        int a3 = cursor.getColumnIndex("a3");
         Poll poll;
         do {
-            poll = new Poll(name,cursor.getString(q1), cursor.getString(q2), cursor.getString(q3),
+            poll = new Poll(name, cursor.getString(q1), cursor.getString(q2), cursor.getString(q3),
                     cursor.getString(a1), cursor.getString(a2), cursor.getString(a3));
         } while (cursor.moveToNext());
         cursor.close();
         return poll;
     }
 
-    public List<String> getMyTasks(String name){
+    public List<String> getMyTasks(String name) {
         List<String> myTasks = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM user_logs WHERE user_name = '"+ name +"';'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM user_logs WHERE user_name = '" + name + "';'", null);
         cursor.moveToFirst();
-        if(cursor.getCount() <= 0){
+        if (cursor.getCount() <= 0) {
             myTasks.add("Мои гласања");
-        }else {
+        } else {
             int name_col = cursor.getColumnIndex("poll_name");
             do {
                 myTasks.add(cursor.getString(name_col));
@@ -101,8 +105,34 @@ public class UserActivity extends AppCompatActivity {
         return myTasks;
     }
 
-    public  void addUserToLog(String userName, String pollName, String start, String end){
-        db.execSQL("INSERT INTO user_logs(user_name,poll_name,start_time,end_time) VALUES( '" +
-                userName + "','"+ pollName+"','" + start + "','" + end + "') ;");
+    public void addUserToLog(String userName, String pollName, String start, String end) {
+        Cursor cursor = db.rawQuery("SELECT user_name FROM user_logs WHERE user_name = '" + userName + "';", null);
+        if (!cursor.moveToFirst() && !Objects.equals(pollName, "No active polls to show")) {
+            db.execSQL("INSERT INTO user_logs(user_name,poll_name,start_time,end_time) VALUES( '" +
+                    userName + "','" + pollName + "','" + start + "','" + end + "') ;");
+        }
+        cursor.close();
+    }
+
+    public void updateUserLogA1(String userName, String pollName, String a1) {
+        Cursor cursor = db.rawQuery("SELECT * FROM user_logs WHERE user_name = '" + userName + "' AND poll_name = '" + pollName + "';", null);
+        cursor.moveToFirst();
+        int id = cursor.getColumnIndex("id");
+        db.execSQL("UPDATE user_logs SET a1 = '" + a1 + "' WHERE id = " + cursor.getString(id) + ";");
+        cursor.close();
+    }
+    public void updateUserLogA2(String userName, String pollName, String a2) {
+        Cursor cursor = db.rawQuery("SELECT * FROM user_logs WHERE user_name = '" + userName + "' AND poll_name = '" + pollName + "';", null);
+        cursor.moveToFirst();
+        int id = cursor.getColumnIndex("id");
+        db.execSQL("UPDATE user_logs SET a1 = '" + a2 + "' WHERE id = " + cursor.getString(id) + ";");
+        cursor.close();
+    }
+    public void updateUserLogA3(String userName, String pollName, String a3) {
+        Cursor cursor = db.rawQuery("SELECT * FROM user_logs WHERE user_name = '" + userName + "' AND poll_name = '" + pollName + "';", null);
+        cursor.moveToFirst();
+        int id = cursor.getColumnIndex("id");
+        db.execSQL("UPDATE user_logs SET a1 = '" + a3 + "' WHERE id = " + cursor.getString(id) + ";");
+        cursor.close();
     }
 }

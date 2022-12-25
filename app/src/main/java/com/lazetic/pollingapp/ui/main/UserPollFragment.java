@@ -7,25 +7,29 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.lazetic.pollingapp.R;
 import com.lazetic.pollingapp.UserActivity;
 import com.lazetic.pollingapp.objects.Poll;
+import com.lazetic.pollingapp.objects.User;
 
 
 public class UserPollFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private String name;
-    RadioGroup radioGroup1;
-    RadioGroup radioGroup2;
-    RadioGroup radioGroup3;
+    RadioGroup radioGroup1,radioGroup2,radioGroup3;
     TextView q1, q2, q3;
+    Toolbar username;
+    Button finishPoll;
 
     public UserPollFragment() {
         // Required empty public constructor
@@ -90,13 +94,16 @@ public class UserPollFragment extends Fragment {
         for_loop(ans2, radioGroup2);
         for_loop(ans3, radioGroup3);
 
-        radioGroup1.setOnCheckedChangeListener((group, checkedId) -> {
-                RadioButton radioButton = group.findViewById(checkedId);
+        radioClick(radioGroup1);
+        radioClick(radioGroup2);
+        radioClick(radioGroup3);
 
-                // on below line we are setting text
-                    // for our status text view.
-            Toast.makeText(getContext(),""+radioButton.getText(), Toast.LENGTH_SHORT).show();
+        finishPoll = view.findViewById(R.id.finishPoll);
+        finishPoll.setOnClickListener(view1 -> {
 
+            FragmentTransaction fr = requireFragmentManager().beginTransaction();
+            fr.replace(R.id.user_container, new UserTasksFragment());
+            fr.commit();
         });
     }
 
@@ -111,5 +118,20 @@ public class UserPollFragment extends Fragment {
             rdbtn.setPadding(0,10,0,50);
             radioGroup.addView(rdbtn);
         }
+    }
+
+    public void radioClick(RadioGroup radioGroup1){
+        radioGroup1.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton radioButton = group.findViewById(checkedId);
+
+            // on below line we are setting text
+            // for our status text view.
+            Toast.makeText(getContext(),""+radioButton.getText(), Toast.LENGTH_SHORT).show();
+            for(int i = 0; i < radioGroup1.getChildCount(); i++){
+                ((RadioButton)radioGroup1.getChildAt(i)).setEnabled(false);
+            }
+            username = requireActivity().findViewById(R.id.toolbar);
+            ((UserActivity) requireActivity()).updateUserLogA1(username.getTitle().toString(),name,radioButton.getText().toString());
+        });
     }
 }
